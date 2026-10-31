@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#7000ff">
+<title>Uzum mobil clon — mobil marketplace demo</title>
+<meta name="description" content="Mustaqil o'zbekcha mobil marketplace demosi (v0.1.0). Uzum bilan rasmiy aloqasi yo'q.">
+<style>
+:root{--p:#7000ff;--ps:#f1eaff;--y:#ffe14d;--sale:#e5374a;--fg:#1f1d2b;--mut:#f3f3f6;--mf:#7d7a8c;--bd:#e7e6ee;--outer:#ecebf2}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+html,body{background:var(--outer);color:var(--fg);font-family:Rubik,system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+input{font:inherit}
+#app{max-width:480px;margin:0 auto;min-height:100dvh;background:#fff;box-shadow:0 0 30px #0001;padding-bottom:calc(80px + env(safe-area-inset-bottom))}
+header{position:sticky;top:0;z-index:20;background:#fff;padding-top:env(safe-area-inset-top)}
+.city{display:flex;align-items:center;gap:4px;padding:12px 16px 0;font-size:14px;font-weight:500;width:100%}
+.city small{margin-left:auto;color:var(--mf);font-size:12px;font-weight:400}
+.search{margin:8px 16px;display:flex;align-items:center;gap:8px;background:var(--mut);border-radius:12px;padding:10px 12px}
+.search input{flex:1;border:0;background:none;outline:none;font-size:14px;min-width:0}
+.promo{margin:4px 16px 0;border-radius:16px;padding:20px;color:#fff;position:relative;overflow:hidden;background:linear-gradient(120deg,#7000ff,#c23bd4 60%,#ffa63d)}
+.promo h2{font-size:24px;line-height:1.15;margin-top:4px}.promo p{font-size:12px;opacity:.9}
+.promo i{position:absolute;border-radius:50%}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 16px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+.chip{flex-shrink:0;border-radius:999px;padding:6px 14px;font-size:14px;background:var(--mut)}.chip.on{background:var(--p);color:#fff}
+h3{padding:0 16px 8px;font-size:18px;font-weight:600}h2.t{padding:16px;font-size:20px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 8px;padding:0 8px}
+.card{min-width:0}.ph{position:relative}.ph img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:12px;background:var(--mut)}
+.fav{position:absolute;right:6px;top:6px;background:#fffc;border-radius:50%;width:30px;height:30px;display:grid;place-items:center}
+.fav svg{width:16px;height:16px}.fav.on svg{fill:var(--p);stroke:var(--p)}
+.disc{position:absolute;left:6px;bottom:6px;background:var(--sale);color:#fff;font-size:10px;font-weight:600;padding:2px 6px;border-radius:4px}
+.info{padding:6px 4px 0;text-align:left;width:100%;display:block}
+.ttl{font-size:12px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.rate{font-size:11px;color:var(--mf);margin-top:4px}
+.inst{display:inline-block;background:var(--y);font-size:11px;font-weight:500;padding:2px 6px;border-radius:4px;margin-top:4px}
+.old{font-size:11px;color:var(--mf);text-decoration:line-through;margin-top:4px}.price{font-size:14px;font-weight:600}
+.btn{display:block;width:100%;background:var(--p);color:#fff;border-radius:12px;padding:12px;font-weight:500;text-align:center}
+.btn.sm{font-size:12px;padding:6px;border-radius:8px;margin-top:6px}.btn:active{transform:scale(.97)}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;border-top:1px solid var(--bd);display:grid;grid-template-columns:repeat(5,1fr);padding-bottom:env(safe-area-inset-bottom);z-index:30}
+nav button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 0;font-size:10px;color:var(--mf);position:relative}
+nav button.on{color:var(--p)}nav svg{width:24px;height:24px}
+.badge{position:absolute;top:4px;right:22%;background:var(--p);color:#fff;font-size:10px;font-weight:600;border-radius:999px;padding:0 5px;min-width:16px}
+.row{display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--bd);padding:14px 0;width:100%;text-align:left;font-size:14px}
+.ico{width:40px;height:40px;border-radius:12px;background:var(--ps);display:grid;place-items:center;font-size:20px}
+.pad{padding:0 16px}.mut{color:var(--mf)}
+.empty{text-align:center;padding:64px 32px;color:var(--mf)}.empty .btn{display:inline-block;width:auto;padding:10px 24px;margin-top:16px}
+.line{display:flex;gap:12px;border:1px solid var(--bd);border-radius:12px;padding:10px;margin-bottom:12px}
+.line img{width:80px;height:80px;border-radius:8px;object-fit:cover;flex-shrink:0}
+.qty{display:flex;align-items:center;background:var(--mut);border-radius:8px}.qty button{padding:4px 10px;font-size:18px}
+.sum{margin:16px;background:var(--mut);border-radius:12px;padding:16px;font-size:14px}.sum div{display:flex;justify-content:space-between;margin:4px 0}
+.overlay{position:fixed;inset:0;background:#1f1d2b66;z-index:40;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:#fff;width:100%;max-width:480px;max-height:90dvh;overflow-y:auto;border-radius:16px 16px 0 0;padding-bottom:env(safe-area-inset-bottom);animation:up .2s ease}
+@keyframes up{from{transform:translateY(100%)}to{transform:none}}
+.sheet img.hero{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+.close{position:absolute;right:12px;top:12px;background:#fffe;border-radius:50%;width:36px;height:36px;font-size:20px}
+.note{background:#fff5c2;border:1px solid var(--y);border-radius:12px;padding:12px;font-size:14px}
+.stat{background:var(--ps);border-radius:12px;padding:12px}
+.demo{text-align:center;font-size:11px;color:var(--mf);margin:24px 16px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+(function(){
+var VERSION="0.1.0",KEY="uzum-mobil-clon:v1";
+var CATS=[["all","Hammasi","🛍️"],["elektronika","Elektronika","📱"],["kiyim","Kiyim","👕"],["poyabzal","Poyabzal","👟"],["aksessuar","Aksessuarlar","⌚"],["gozallik","Go'zallik","💄"],["uy","Uy-ro'zg'or","🏠"]];
+function u(id){return "https://images.unsplash.com/"+id+"?w=600&q=70&auto=format&fit=crop"}
+var P=[
+["p1","Simsiz quloqchinlar, shovqinni pasaytirish","elektronika",459000,620000,4.8,1243,"photo-1505740420928-5e560c06d30e","Bluetooth 5.3, 30 soatgacha ishlash, faol shovqin pasaytirish."],
+["p2","Smartfon 128 GB, 6.5\" ekran","elektronika",2899000,3290000,4.7,860,"photo-1511707171634-5f897ff02aa9","8 GB operativ xotira, 50 MP kamera, 5000 mAh batareya."],
+["p3","Noutbuk 14\", 16 GB / 512 GB SSD","elektronika",9490000,0,4.9,312,"photo-1517336714731-489689fd1ca8","Yengil alyumin korpus, ish va o'qish uchun ideal."],
+["p4","Raqamli fotoapparat, retro dizayn","elektronika",5390000,5990000,4.6,98,"photo-1526170375885-4d8ecf77b99f","24 MP sensor, 4K video, almashtiriladigan obyektiv."],
+["p5","Erkaklar klassik qo'l soati","aksessuar",389000,499000,4.7,540,"photo-1523275335684-37898b6baf30","Suvga chidamli, zanglamaydigan po'lat, charm tasma."],
+["p6","Quyoshdan himoya ko'zoynagi UV400","aksessuar",129000,190000,4.5,721,"photo-1572635196237-14b3f281503f","Polarizatsiyalangan linzalar, yengil ramka."],
+["p7","Sport krossovkalari, qizil","poyabzal",549000,790000,4.8,2011,"photo-1542291026-7eec264c27ff","Yumshoq taglik, nafas oluvchi to'r material."],
+["p8","Kundalik krossovka, unisex","poyabzal",419000,0,4.6,455,"photo-1491553895911-0055eca6402d","Har kungi kiyish uchun qulay va yengil."],
+["p9","Paxta futbolka, oq rang","kiyim",89000,129000,4.7,3320,"photo-1521572163474-6864f9cf17ab","100% paxta, S–XXL o'lchamlar."],
+["p10","Ayollar kiyimlari to'plami","kiyim",349000,0,4.4,187,"photo-1434389677669-e08b4cac3105","Mavsumiy kolleksiya, yumshoq mato."],
+["p11","Atir, gulli-mevali hid, 50 ml","gozallik",279000,350000,4.9,964,"photo-1585386959984-a4155224a1ad","Uzoq saqlanuvchi hid, sovg'a uchun qadoq."],
+["p12","Yuz parvarishi to'plami","gozallik",199000,0,4.6,402,"photo-1556228578-8c89e6adf883","Tozalovchi, tonik va namlovchi krem."],
+["p13","Smart televizor 43\" 4K","uy",3790000,4390000,4.7,233,"photo-1593359677879-a4bb92f829d1","Android TV, HDR10, Wi‑Fi va Bluetooth."],
+["p14","Oshxona jihozlari to'plami","uy",659000,0,4.5,141,"photo-1556909114-f6e7ad7d3136","Zamonaviy oshxona uchun kerakli jihozlar."]
+].map(function(a){return{id:a[0],title:a[1],cat:a[2],price:a[3],old:a[4]||0,rating:a[5],reviews:a[6],img:u(a[7]),desc:a[8]}});
+function som(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g," ")+" so'm"}
+function mon(n){return Math.ceil(n/12/1000)*1000}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function byId(id){return P.filter(function(p){return p.id===id})[0]}
+var S={tab:"home",q:"",cat:"all",open:null,checkout:0,cart:[],favs:[]};
+try{var d=JSON.parse(localStorage.getItem(KEY)||"{}");S.cart=d.cart||[];S.favs=d.favs||[]}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify({cart:S.cart,favs:S.favs}))}catch(e){}}
+function totals(){var t=0,o=0,c=0;S.cart.forEach(function(l){var p=byId(l.id);if(!p)return;t+=p.price*l.qty;o+=(p.old||p.price)*l.qty;c+=l.qty});return{total:t,saved:o-t,count:c}}
+var I={
+home:'<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+catalog:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+favs:'<path d="M12 20s-7-4.4-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.6-9 9-9 9z"/>',
+cart:'<path d="M6 7h12l-1 13H7z"/><path d="M9 7a3 3 0 0 1 6 0"/>',
+profile:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'};
+function svg(k){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">'+I[k]+'</svg>'}
+function card(p){var f=S.favs.indexOf(p.id)>-1;return '<article class="card"><div class="ph"><button data-a="open" data-id="'+p.id+'" style="display:block;width:100%"><img loading="lazy" src="'+p.img+'" alt="'+esc(p.title)+'"></button><button class="fav'+(f?' on':'')+'" aria-label="Sevimlilarga" data-a="fav" data-id="'+p.id+'">'+svg("favs")+'</button>'+(p.old?'<span class="disc">−'+Math.round((1-p.price/p.old)*100)+'%</span>':'')+'</div><button class="info" data-a="open" data-id="'+p.id+'"><p class="ttl">'+esc(p.title)+'</p><p class="rate">⭐ '+p.rating+' ('+p.reviews+' sharh)</p><span class="inst">'+som(mon(p.price))+'/oy</span>'+(p.old?'<p class="old">'+som(p.old)+'</p>':'')+'<p class="price">'+som(p.price)+'</p></button><div style="padding:0 4px"><button class="btn sm" data-a="add" data-id="'+p.id+'">Savatga</button></div></article>'}
+function grid(l){return '<div class="grid">'+l.map(card).join("")+'</div>'}
+function empty(t,a){return '<div class="empty"><p style="font-size:44px">🛍️</p><p>'+t+'</p>'+(a?'<button class="btn" data-a="tab" data-id="home">'+a+'</button>':'')+'</div>'}
+function header(){return '<header><button class="city">📍 Toshkent ▾<small>Yetkazib berish 1 kunda</small></button><label class="search">🔍<input id="q" aria-label="Qidiruv" placeholder="Mahsulotlar va turkumlar izlash" value="'+esc(S.q)+'">'+(S.q?'<button data-a="clear" aria-label="Tozalash">✕</button>':'')+'</label></header>'}
+function homeBody(){var q=S.q.trim().toLowerCase();var l=P.filter(function(p){return(S.cat==="all"||p.cat===S.cat)&&(!q||p.title.toLowerCase().indexOf(q)>-1)});
+return (S.q?'':'<div class="promo"><p>Kuz aksiyasi</p><h2>−40% gacha<br>chegirmalar</h2><p style="margin-top:8px">Muddatli to\'lov 0% · 12 oy</p><i style="right:-24px;top:-24px;width:112px;height:112px;background:#fff3"></i><i style="right:40px;bottom:-40px;width:96px;height:96px;background:#ffe14d66"></i></div>')+
+'<div class="chips">'+CATS.map(function(c){return '<button class="chip'+(S.cat===c[0]?' on':'')+'" data-a="cat" data-id="'+c[0]+'">'+c[2]+' '+c[1]+'</button>'}).join("")+'</div><h3>'+(S.q?'“'+esc(S.q)+'” bo\'yicha natijalar':'Siz uchun tavsiyalar')+'</h3>'+(l.length?grid(l):empty("Hech narsa topilmadi"))}
+function views(){var t=totals();
+if(S.tab==="home")return homeBody();
+if(S.tab==="catalog")return '<div class="pad"><h2 style="padding:8px 0;font-size:20px">Katalog</h2>'+CATS.slice(1).map(function(c){return '<button class="row" data-a="pick" data-id="'+c[0]+'"><span class="ico">'+c[2]+'</span><span style="flex:1">'+c[1]+'</span><span class="mut" style="font-size:12px">'+P.filter(function(p){return p.cat===c[0]}).length+'</span> ›</button>'}).join("")+'</div>';
+if(S.tab==="favs"){var fl=P.filter(function(p){return S.favs.indexOf(p.id)>-1});return '<div style="padding-top:env(safe-area-inset-top)"><h2 class="t">Sevimlilar</h2>'+(fl.length?grid(fl):empty("Sevimlilar ro'yxati bo'sh","Xarid qilish"))+'</div>'}
+if(S.tab==="cart"){if(!S.cart.length)return '<div style="padding-top:env(safe-area-inset-top)"><h2 class="t">Savat</h2>'+empty("Savatda hozircha mahsulot yo'q","Bosh sahifaga")+'</div>';
+return '<div style="padding-top:env(safe-area-inset-top)"><h2 class="t">Savat <span class="mut" style="font-size:16px;font-weight:400">· '+t.count+' ta</span></h2><div class="pad">'+S.cart.map(function(l){var p=byId(l.id);if(!p)return"";return '<div class="line"><img src="'+p.img+'" alt=""><div style="flex:1;min-width:0"><p class="ttl" style="font-size:14px">'+esc(p.title)+'</p><p class="price" style="margin-top:4px;font-size:16px">'+som(p.price*l.qty)+'</p><div style="display:flex;align-items:center;margin-top:8px"><div class="qty"><button aria-label="Kamaytirish" data-a="dec" data-id="'+p.id+'">−</button><span>'+l.qty+'</span><button aria-label="Ko\'paytirish" data-a="inc" data-id="'+p.id+'">+</button></div><button aria-label="O\'chirish" class="mut" style="margin-left:auto;padding:6px" data-a="rm" data-id="'+p.id+'">🗑</button></div></div></div>'}).join("")+'</div><div class="sum"><div><span class="mut">Mahsulotlar ('+t.count+')</span><span>'+som(t.total+t.saved)+'</span></div>'+(t.saved?'<div><span class="mut">Chegirma</span><span style="color:var(--sale)">−'+som(t.saved)+'</span></div>':'')+'<div><span class="mut">Yetkazib berish</span><span>Bepul</span></div><div style="border-top:1px solid var(--bd);padding-top:8px;font-weight:600;font-size:16px"><span>Jami</span><span>'+som(t.total)+'</span></div></div><div class="pad"><button class="btn" data-a="checkout">Rasmiylashtirish</button></div></div>'}
+return '<div class="pad" style="padding-top:env(safe-area-inset-top)"><div style="display:flex;gap:12px;align-items:center;padding:20px 0"><div style="width:56px;height:56px;border-radius:50%;background:var(--p);color:#fff;display:grid;place-items:center;font-size:20px;font-weight:700">A</div><div><p style="font-weight:600">Demo foydalanuvchi</p><p class="mut" style="font-size:14px">+998 90 000 00 00</p></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="stat"><b style="font-size:20px">'+S.favs.length+'</b><p class="mut" style="font-size:12px">Sevimlilar</p></div><div class="stat"><b style="font-size:20px">'+t.count+'</b><p class="mut" style="font-size:12px">Savatda</p></div></div>'+["Buyurtmalarim","Manzillarim","To'lov usullari","Til: O'zbekcha","Yordam"].map(function(x){return '<div class="row">'+x+'<span class="mut" style="margin-left:auto">›</span></div>'}).join("")+'<p class="demo">Uzum mobil clon v'+VERSION+' · Mustaqil demo loyiha, Uzum bilan rasmiy aloqasi yo\'q.</p></div>'}
+function sheet(){if(S.checkout){var t=totals();return '<div class="overlay" data-a="close"><div class="sheet" role="dialog" style="padding:20px">'+(S.checkout===2?'<div style="text-align:center;padding:24px 0"><p style="font-size:40px">✅</p><h2 style="font-size:18px;margin-top:8px">Demo buyurtma qabul qilindi</h2><p class="mut" style="font-size:14px;margin:4px 0 20px">Bu faqat namoyish. Hech qanday to\'lov amalga oshirilmadi.</p><button class="btn" data-a="done">Yaxshi</button></div>':'<h2 style="font-size:18px;margin-bottom:12px">Buyurtmani rasmiylashtirish</h2><div class="note">⚠️ Demo rejim: haqiqiy to\'lov olinmaydi, karta ma\'lumotlari so\'ralmaydi.</div><div class="sum" style="margin:12px 0"><div><span class="mut">Manzil</span><span>Toshkent, demo manzil</span></div><div><span class="mut">To\'lov</span><span>Qabul qilishda (demo)</span></div><div style="font-weight:600"><span>Jami</span><span>'+som(t.total)+'</span></div></div><button class="btn" data-a="order">Demo buyurtma berish</button>')+'</div></div>'}
+if(!S.open)return"";var p=byId(S.open),f=S.favs.indexOf(p.id)>-1,ic=(S.cart.filter(function(l){return l.id===p.id})[0]||{}).qty||0;
+return '<div class="overlay" data-a="close"><div class="sheet" role="dialog"><div style="position:relative"><img class="hero" src="'+p.img+'" alt="'+esc(p.title)+'"><button class="close" aria-label="Yopish" data-a="close">✕</button></div><div style="padding:16px;display:grid;gap:8px"><p class="mut" style="font-size:14px">⭐ '+p.rating+' · '+p.reviews+' sharh</p><h2 style="font-size:18px">'+esc(p.title)+'</h2><p><b style="font-size:24px">'+som(p.price)+'</b> '+(p.old?'<span class="old">'+som(p.old)+'</span>':'')+'</p><div style="background:var(--y);border-radius:12px;padding:8px 12px;font-size:14px">Muddatli to\'lov: <b>'+som(mon(p.price))+'</b> × 12 oy</div><p class="mut" style="font-size:14px">'+esc(p.desc)+'</p><p style="font-size:14px">🚚 Toshkent bo\'ylab ertaga yetkazib beriladi</p><div style="display:flex;gap:8px;padding-top:8px"><button class="fav'+(f?' on':'')+'" style="position:static;width:48px;height:48px;border:1px solid var(--bd);border-radius:12px" aria-label="Sevimlilarga" data-a="fav" data-id="'+p.id+'">'+svg("favs")+'</button><button class="btn" style="flex:1" data-a="add" data-id="'+p.id+'">'+(ic?'Savatda: '+ic+' ta · yana qo\'shish':'Savatga qo\'shish')+'</button></div></div></div></div>'}
+var app=document.getElementById("app");
+function render(focus){var t=totals(),tabs=[["home","Bosh sahifa"],["catalog","Katalog"],["favs","Sevimlilar"],["cart","Savat"],["profile","Profil"]];
+var sy=window.scrollY;
+app.innerHTML=(S.tab==="home"||S.tab==="catalog"?header():"")+'<main>'+views()+'</main><nav>'+tabs.map(function(x){return '<button class="'+(S.tab===x[0]?'on':'')+'" data-a="tab" data-id="'+x[0]+'">'+svg(x[0])+x[1]+(x[0]==="cart"&&t.count?'<span class="badge">'+t.count+'</span>':'')+'</button>'}).join("")+'</nav>'+sheet();
+document.body.style.overflow=(S.open||S.checkout)?"hidden":"";
+window.scrollTo(0,sy);
+var q=document.getElementById("q");if(q){q.oninput=function(){S.q=q.value;if(S.tab!=="home")S.tab="home";render(true)};if(focus){q.focus();q.setSelectionRange(q.value.length,q.value.length)}}}
+app.addEventListener("click",function(e){var el=e.target.closest("[data-a]");if(!el)return;var a=el.dataset.a,id=el.dataset.id;
+if(a==="close"&&el.classList.contains("overlay")&&e.target!==el)return;
+e.stopPropagation();
+if(a==="tab"){S.tab=id;window.scrollTo(0,0)}
+else if(a==="cat")S.cat=id;else if(a==="pick"){S.cat=id;S.tab="home"}
+else if(a==="clear")S.q="";
+else if(a==="open")S.open=id;else if(a==="close"){S.open=null;S.checkout=0}
+else if(a==="fav"){var i=S.favs.indexOf(id);i>-1?S.favs.splice(i,1):S.favs.push(id);save()}
+else if(a==="add"){var l=S.cart.filter(function(x){return x.id===id})[0];l?l.qty++:S.cart.push({id:id,qty:1});save()}
+else if(a==="inc"||a==="dec"){S.cart.forEach(function(x){if(x.id===id)x.qty+=a==="inc"?1:-1});S.cart=S.cart.filter(function(x){return x.qty>0});save()}
+else if(a==="rm"){S.cart=S.cart.filter(function(x){return x.id!==id});save()}
+else if(a==="checkout")S.checkout=1;else if(a==="order")S.checkout=2;
+else if(a==="done"){S.cart=[];S.checkout=0;S.tab="home";save()}
+render()});
+render();
+})();
+</script>
+</body>
+</html>
+
