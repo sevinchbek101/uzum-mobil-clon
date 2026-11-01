@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.1] - 2026-11-01
+
+### Tuzatildi
+
+- D1 parametr limitiga sig‘ishi uchun boshlang‘ich mahsulotlar kichik batch’larga ajratildi.
+- Bir vaqtda takror seed ishlasa, mavjud yozuvlar xato bermasdan saqlanadigan qilindi.
+- `/api/store` xatolari production loglarida aniqroq ko‘rsatiladi.
+
 ## [0.2.0] - 2026-11-01
 
 ### Qo‘shildi

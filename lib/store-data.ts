@@ -41,16 +41,23 @@ export async function ensureSeeded() {
   const existing = await db.select({ id: categories.id }).from(categories).limit(1);
   if (existing.length) return;
   const timestamp = now();
+  const productValues = seedProducts.map(([id, title, categoryId, price, oldPrice, rating, reviews, imageId, description, stock]) => ({
+    id, title, categoryId, price, oldPrice, rating, reviews, image: image(imageId), description, stock, active: true, createdAt: timestamp, updatedAt: timestamp,
+  }));
+  const productChunks = Array.from({ length: Math.ceil(productValues.length / 4) }, (_, index) =>
+    productValues.slice(index * 4, index * 4 + 4),
+  );
+
   await db.batch([
-    db.insert(categories).values(seedCategories.map(([id, name, emoji], index) => ({ id, name, emoji, sortOrder: index, createdAt: timestamp }))),
-    db.insert(products).values(seedProducts.map(([id, title, categoryId, price, oldPrice, rating, reviews, imageId, description, stock]) => ({
-      id, title, categoryId, price, oldPrice, rating, reviews, image: image(imageId), description, stock, active: true, createdAt: timestamp, updatedAt: timestamp,
-    }))),
+    db.insert(categories)
+      .values(seedCategories.map(([id, name, emoji], index) => ({ id, name, emoji, sortOrder: index, createdAt: timestamp })))
+      .onConflictDoNothing(),
+    ...productChunks.map((values) => db.insert(products).values(values).onConflictDoNothing()),
     db.insert(settings).values([
       { key: "storeName", value: "Uzum mobil clon", updatedAt: timestamp },
       { key: "promoTitle", value: "Kuz aksiyasi — 40% gacha chegirma", updatedAt: timestamp },
       { key: "promoSubtitle", value: "Muddatli to‘lov 0% · 12 oy", updatedAt: timestamp },
-    ]),
+    ]).onConflictDoNothing(),
   ]);
 }
 

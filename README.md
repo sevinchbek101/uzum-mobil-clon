@@ -1,4 +1,4 @@
-# Uzum mobil clon — v0.2.0
+# Uzum mobil clon — v0.2.1
 
 Mustaqil o‘zbekcha mobil marketplace demosi. Uzum bilan rasmiy aloqasi yo‘q.
 

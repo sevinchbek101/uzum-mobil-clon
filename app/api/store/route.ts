@@ -7,7 +7,7 @@ export async function GET() {
   try {
     return NextResponse.json(await getStoreData());
   } catch (error) {
-    console.error(error);
+    console.error("GET /api/store failed:", error instanceof Error ? error.message : error);
     return NextResponse.json({ error: "Do‘kon ma’lumotlarini yuklab bo‘lmadi." }, { status: 500 });
   }
 }

@@ -1,6 +1,6 @@
 # Boshqa AI uchun davom ettirish prompti
 
-Sen `sevinchbek101/uzum-mobil-clon` loyihasini davom ettiryapsan. Joriy versiya `0.2.0`. Bu Uzum mobil ilovasi tuzilishidan ilhomlangan, ammo Uzum bilan rasmiy aloqasi bo‘lmagan o‘zbekcha marketplace demo.
+Sen `sevinchbek101/uzum-mobil-clon` loyihasini davom ettiryapsan. Joriy versiya `0.2.1`. Bu Uzum mobil ilovasi tuzilishidan ilhomlangan, ammo Uzum bilan rasmiy aloqasi bo‘lmagan o‘zbekcha marketplace demo.
 
 ## Arxitektura
 
